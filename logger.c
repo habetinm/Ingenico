@@ -10,13 +10,14 @@
 extern FILE* pFile;
 extern pthread_mutex_t logger_mutex[QUEUE_SIZE];
 extern TDATA priority_queue[QUEUE_SIZE];
+extern int record_cnt;
 
 void* logger_func(void* arg)
 {
   struct timespec time_stamp;
   char str[256];
     
-  while (1)
+  while (record_cnt >= 0)
   {
     for (int i = 0; i < QUEUE_SIZE; i++)
     {
@@ -39,5 +40,6 @@ void* logger_func(void* arg)
     sleep(5);
   }
   
+  fflush(pFile);
   pthread_exit((void*)0);
 }

@@ -17,6 +17,7 @@ pthread_t logger_id;
 TDATA shared_data[THREAD_CNT];
 TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
 int data;
+int record_cnt = RECORD_CNT;
 
 int search_for_highest_priority(void);
 void invalidate_data(int idx);
@@ -60,7 +61,7 @@ void main(void)
   
   
   
-  while (1)
+  while (record_cnt >= 0)
   {
     for (int i = 0; i < THREAD_CNT; i++)
     {
@@ -76,9 +77,10 @@ void main(void)
             memcpy(&priority_queue[shared_data[i].cPriority], &shared_data[i], sizeof(TDATA));
             pthread_mutex_unlock(&logger_mutex[shared_data[i].cPriority]);
             
-            printf("main: [%3d] - client id: %lu enqued\n", shared_data[i].cPriority, shared_data[i].dwClientId);
+            printf("main: [%3d] - client id: %lu enqued %d\n", shared_data[i].cPriority, shared_data[i].dwClientId, record_cnt);
             
             invalidate_data(i);
+            record_cnt--;
           }
             
           //pthread_mutex_unlock(&mutexes[i]);
@@ -91,17 +93,24 @@ void main(void)
       sleep(1);
     }
   }
-
+/*
   for (int i = 0; i < THREAD_CNT; i++)
   {
     pthread_join(thread_id[i], &status);
   }
   
+  pthread_join(logger_id, &status);
+*/  
   printf("%li [us] - Konec\n", time_stamp.tv_nsec/1000);
   
   for (int i = 0; i < THREAD_CNT; i++)
   {
     pthread_mutex_destroy(&mutexes[i]);
+  }
+  
+  for (int i = 0; i < QUEUE_SIZE; i++)
+  {
+    pthread_mutex_destroy(&logger_mutex[i]);
   }
   
   fclose(pFile);

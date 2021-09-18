@@ -9,6 +9,7 @@
 
 extern pthread_mutex_t mutexes[THREAD_CNT];
 extern TDATA shared_data[THREAD_CNT];
+extern int record_cnt;
 
 void* client_func(void* arg)
 {
@@ -16,7 +17,6 @@ void* client_func(void* arg)
   struct timespec time_stamp;
   int cli_id = (int)pthread_self();
   int my_idx;
-  int j = 0;
   
   for (int i = 0; i < THREAD_CNT; i++)
   {
@@ -27,7 +27,7 @@ void* client_func(void* arg)
     }
   }
   
-  while (1)
+  while (record_cnt >= 0)
   {
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp);
   
@@ -42,12 +42,13 @@ void* client_func(void* arg)
       strncpy(shared_data[my_idx].Data, ClientData, MAX_MSG_SIZE);
     }
     
-    j++;
     pthread_mutex_unlock(&mutexes[my_idx]);
     
-    printf("client [%d]: %u, %d created\n", my_idx, my_idx, j); 
+    printf("client [%d]: %u created\n", my_idx, my_idx); 
     sleep(1);
   }
+  
+  shared_data[my_idx].dwClientId = INVALID_CLIENT_ID;
   
   pthread_exit((void*)0);
 }

@@ -10,6 +10,10 @@
   #define THREAD_CNT 10
 #endif
 
+#ifndef RECORD_CNT
+  #define RECORD_CNT 10000
+#endif
+
 #define MAX_MSG_SIZE 255
 #define MAX_MSG_PRIORITY 0
 #define MIN_MSG_PRIORITY 255
