@@ -22,10 +22,8 @@ void* logger_func(void* arg)
     {
       if (pthread_mutex_trylock(&logger_mutex[i]) == 0)
       {
-        //printf("* %d\n", i);
         if (priority_queue[i].valid == 1)
         {
-          //printf("** %d\n", i);
           clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp);
           sprintf(str, "log time: %lu [us], cli id: %lu, pri: %3d, org time: %lu [us]\n", time_stamp.tv_nsec/1000, priority_queue[i].dwClientId, priority_queue[i].cPriority, priority_queue[i].dwTicks);
           printf("%s", str);
@@ -38,8 +36,7 @@ void* logger_func(void* arg)
     }
     
     fflush(pFile);
-    //sleep(3);
-    //printf("***\n");
+    sleep(5);
   }
   
   pthread_exit((void*)0);

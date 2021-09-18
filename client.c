@@ -15,7 +15,6 @@ void* client_func(void* arg)
   char ClientData[MAX_MSG_SIZE];
   struct timespec time_stamp;
   int cli_id = (int)pthread_self();
-  //int data = (int)arg;
   int my_idx;
   int j = 0;
   
@@ -30,8 +29,6 @@ void* client_func(void* arg)
   
   while (1)
   {
-    //printf("%s: %d, %d\n", "thread_func()", cli_id, data);
-    //sprintf(ClientData, "Client id: %u idx: %d\n", cli_id, my_idx);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp);
   
     pthread_mutex_lock(&mutexes[my_idx]);
@@ -43,15 +40,13 @@ void* client_func(void* arg)
       shared_data[my_idx].cPriority = random() % (MIN_MSG_PRIORITY + 1);
       shared_data[my_idx].valid = 1;
       strncpy(shared_data[my_idx].Data, ClientData, MAX_MSG_SIZE);
-      
-      //j++;
     }
     
     j++;
     pthread_mutex_unlock(&mutexes[my_idx]);
     
     printf("client [%d]: %u, %d created\n", my_idx, my_idx, j); 
-    //sleep(1);
+    sleep(1);
   }
   
   pthread_exit((void*)0);

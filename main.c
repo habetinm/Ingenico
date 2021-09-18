@@ -29,8 +29,6 @@ void main(void)
   int highest_priority_idx = 0;
   int head_idx = 0, tail_idx = 0, free_idx = 0;
 
-  int j[THREAD_CNT];
-
   pFile = fopen("./log.txt", "w+");
   if (pFile == NULL)
   {
@@ -40,7 +38,6 @@ void main(void)
   memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
   memset(&higest_priority_data, 0, sizeof(TDATA));
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
-  //queue[0].dwTicks = time_stamp_start.tv_nsec/1000;
   data = 0;
   memset(&shared_data, 0, sizeof(TDATA) * THREAD_CNT);
   
@@ -52,7 +49,6 @@ void main(void)
     pthread_mutex_init(&mutexes[i], NULL);
     pthread_create(&thread_id[i], NULL, client_func, (void*)data++);
     shared_data[i].dwClientId = (unsigned long)thread_id[i];
-    j[i] = 0;
   }
   
   for (int i = 0; i < QUEUE_SIZE; i++)
@@ -88,59 +84,13 @@ void main(void)
           //pthread_mutex_unlock(&mutexes[i]);
         }
         
-        j[i]++;
         pthread_mutex_unlock(&mutexes[i]);
       }
       
       //printf("main: %d, %d\n", i, j[i]);
-      //sleep(1);
-    }
-    
-    // test plneni prioritni fronty
-    //printf(">>> ");
-/*    
-    for (int i = 0; i < 255; i++)
-    {
-      if (priority_queue[i].valid)
-      {
-        printf("%d ", i);
-      }
-    }
-    */
-  }
-  
-  
-  
-/*  
-  while (1)
-  {
-    highest_priority_idx = search_for_highest_priority();
-    // co kdyz je fronta prazdna ?
-  
-    // copy to queue with respect to the priority
-    memcpy(&queue[free_idx++], &shared_data[highest_priority_idx], sizeof(TDATA));
-    free_idx %= QUEUE_SIZE;
-    
-    if ()
-          
-    if (pthread_mutex_trylock(&mutexes[highest_priority_idx]) == 0)
-    {
-      // clear shared_data except of dwClientId
-      invalidate_data(highest_priority_idx);
-      
-      pthread_mutex_unlock(&mutexes[highest_priority_idx]);
+      sleep(1);
     }
   }
-*/
-
-/*
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp);
-  time_stamp.tv_nsec = time_stamp.tv_nsec - time_stamp_start.tv_nsec;
-  queue[free_idx++] = shared_data;
-  shared_data.valid = 0;
-  free_idx %= QUEUE_SIZE;
-*/  
-  
 
   for (int i = 0; i < THREAD_CNT; i++)
   {
