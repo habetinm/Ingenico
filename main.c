@@ -13,7 +13,6 @@ pthread_mutex_t mutexes[THREAD_CNT];
 pthread_mutex_t logger_mutex[QUEUE_SIZE];
 pthread_t thread_id[THREAD_CNT];
 pthread_t logger_id;
-//TDATA queue[QUEUE_SIZE];
 TDATA shared_data[THREAD_CNT];
 TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
 int data;
@@ -33,7 +32,8 @@ void main(void)
   pFile = fopen("./log.txt", "w+");
   if (pFile == NULL)
   {
-    printf("log create failed\n");
+    printf("log file create failed\n");
+    return;
   }
   
   memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
@@ -90,17 +90,17 @@ void main(void)
       }
       
       //printf("main: %d, %d\n", i, j[i]);
-      sleep(1);
+      //sleep(1);
     }
   }
-/*
+
   for (int i = 0; i < THREAD_CNT; i++)
   {
-    pthread_join(thread_id[i], &status);
+    pthread_cancel(thread_id[i]);
   }
+ 
+  //pthread_join(logger_id, &status);
   
-  pthread_join(logger_id, &status);
-*/  
   printf("%li [us] - Konec\n", time_stamp.tv_nsec/1000);
   
   for (int i = 0; i < THREAD_CNT; i++)
@@ -114,7 +114,7 @@ void main(void)
   }
   
   fclose(pFile);
-  pthread_exit((void*)0);
+  return;
 }
 
 int search_for_highest_priority(void)
@@ -143,37 +143,4 @@ void invalidate_data(int idx)
   shared_data[idx].valid = 0;
 }
 
-/*
-Hi Milan,
 
-Let imagine case with 2 clients and 1 server.
-1st client has ID 12345. 2nd client has ID 99999.
-
-Suppose that priority 3  is bigger 10 means 3 go first, than 10 if ticks is same.
-Ticks - time of message generation.
-
-Example of execution 2 clients. Priority for each message is generated randomly.
-1. 1st client generate request. tagTDATA {cPriority = 10, dwTicks = 1, dwClientId = 12345, Data = "ABCDEFG....ANY DATA TO SIMULATE"}; = Msg1
-QUEUE = {Msg1}
-2. 1st client generate request. tagTDATA {cPriority = 5, dwTicks = 10, dwClientId = 12345, Data = "ABCDEFG....ANY DATA TO SIMULATE"}; = Msg2
-QUEUE = { Msg2, Msg1}
-3. 2st client generate request. tagTDATA {cPriority = 3, dwTicks = 10, dwClientId = 99999, Data = "ABCDEFG....ANY DATA TO SIMULATE"}; = Msg3
-QUEUE = { Msg3, Msg2, Msg1}
-4. 1st client generate request. tagTDATA {cPriority = 5, dwTicks = 63, dwClientId = 12345, Data = "ABCDEFG....ANY DATA TO SIMULATE"}; = Msg4
-QUEUE = { Msg3, Msg2, Msg4, Msg1}
-5. Server takes first msg: Msg3 and write to log dwTicks_writeLog = 64
-QUEUE = { Msg2, Msg4, Msg1}
-6. Server takes first msg: Msg2 and write to log dwTicks_writeLog = 65
-QUEUE = { Msg4, Msg1}
-7. 2st client generate request. tagTDATA {cPriority = 3, dwTicks = 10, dwClientId = 99999, Data = "ABCDEFG....ANY DATA TO SIMULATE"}; = Msg5
-QUEUE = { Msg5, Msg4, Msg1}
-...... <-- Simulations
-N. Stop Simulations
-After that think how to better implement it adding, getting from Queue, write log and stopping simulations.
-
-Let me know if you have any questions.
-
------------------
-Best regards,
-Maksym MAKARYCHEV
-*/

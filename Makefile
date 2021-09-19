@@ -1,5 +1,5 @@
 app: main.c data.h client.o logger.o
-	gcc -D_REENTRANT -pthread -DTHREAD_CNT=5 -DRECORD_CNT=200 client.o logger.o main.c -o app
+	gcc -D_REENTRANT -pthread -DTHREAD_CNT=5 -DRECORD_CNT=1000 client.o logger.o main.c -o app
 	
 client.o: client.c client.h data.h
 	gcc -c -D_REENTRANT -pthread client.c

@@ -37,7 +37,7 @@ void* logger_func(void* arg)
     }
     
     fflush(pFile);
-    sleep(5);
+    //sleep(5);
   }
   
   fflush(pFile);

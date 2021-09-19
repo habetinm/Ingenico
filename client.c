@@ -45,7 +45,7 @@ void* client_func(void* arg)
     pthread_mutex_unlock(&mutexes[my_idx]);
     
     printf("client [%d]: %u created\n", my_idx, my_idx); 
-    sleep(1);
+    //sleep(1);
   }
   
   shared_data[my_idx].dwClientId = INVALID_CLIENT_ID;
