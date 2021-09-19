@@ -42,8 +42,6 @@ void main(void)
   data = 0;
   memset(&shared_data, 0, sizeof(TDATA) * THREAD_CNT);
   
-  
-  
   for (int i = 0; i < THREAD_CNT; i++)
   {
     invalidate_data(i);
@@ -59,8 +57,6 @@ void main(void)
   
   pthread_create(&logger_id, NULL, logger_func, NULL);
   
-  
-  
   while (record_cnt >= 0)
   {
     for (int i = 0; i < THREAD_CNT; i++)
@@ -71,26 +67,16 @@ void main(void)
         {
           if (shared_data[i].valid)
           {
-            //printf("> %d, %d\n", i, shared_data[i].cPriority);
             pthread_mutex_lock(&logger_mutex[shared_data[i].cPriority]);
-            //printf("<<<\n");
             memcpy(&priority_queue[shared_data[i].cPriority], &shared_data[i], sizeof(TDATA));
             pthread_mutex_unlock(&logger_mutex[shared_data[i].cPriority]);
-            
-            printf("main: [%3d] - client id: %lu enqued %d\n", shared_data[i].cPriority, shared_data[i].dwClientId, record_cnt);
-            
             invalidate_data(i);
             record_cnt--;
           }
-            
-          //pthread_mutex_unlock(&mutexes[i]);
         }
         
         pthread_mutex_unlock(&mutexes[i]);
       }
-      
-      //printf("main: %d, %d\n", i, j[i]);
-      //sleep(1);
     }
   }
 
@@ -99,9 +85,7 @@ void main(void)
     pthread_cancel(thread_id[i]);
   }
  
-  //pthread_join(logger_id, &status);
-  
-  printf("%li [us] - Konec\n", time_stamp.tv_nsec/1000);
+  printf("%li [us] - Finished\n", time_stamp.tv_nsec/1000);
   
   for (int i = 0; i < THREAD_CNT; i++)
   {

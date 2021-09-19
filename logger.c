@@ -27,7 +27,6 @@ void* logger_func(void* arg)
         {
           clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp);
           sprintf(str, "log time: %lu [us], cli id: %lu, pri: %3d, org time: %lu [us]\n", time_stamp.tv_nsec/1000, priority_queue[i].dwClientId, priority_queue[i].cPriority, priority_queue[i].dwTicks);
-          printf("%s", str);
           fprintf(pFile, "%s", str);
           memset(&priority_queue[i], 0, sizeof(TDATA));
         }
@@ -37,7 +36,6 @@ void* logger_func(void* arg)
     }
     
     fflush(pFile);
-    //sleep(5);
   }
   
   fflush(pFile);
