@@ -9,5 +9,5 @@ logger.o: logger.c logger.h data.h
 	
 .PHONY: clean
 clean:
-	rm -f logger.o client.o a.out app log.txt
+	rm -f main.o logger.o client.o a.out app log.txt
 
