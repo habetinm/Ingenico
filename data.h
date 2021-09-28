@@ -1,13 +1,13 @@
 #ifndef DATA_H_INCLUDED
 #define DATA_H_INCLUDED
 
-#ifndef THREAD_CNT
-  #define THREAD_CNT 10
+#ifndef CLIENT_CNT
+  #define CLIENT_CNT 10
 #endif
 
-#if THREAD_CNT > 10
-  #undef THREAD_CNT
-  #define THREAD_CNT 10
+#if CLIENT_CNT > 10
+  #undef CLIENT_CNT
+  #define CLIENT_CNT 10
 #endif
 
 #ifndef RECORD_CNT
