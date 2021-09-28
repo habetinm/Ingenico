@@ -13,65 +13,48 @@ TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
 int record_cnt = RECORD_CNT;
 
 int search_for_highest_priority(void);
-
 void main_exec(TDATA* arg);
 
 void main(void)
 {
-  TDATA higest_priority_data;
-  struct timespec time_stamp_start, time_stamp;
-  int highest_priority_idx = 0;
-  int head_idx = 0, tail_idx = 0, free_idx = 0;
+    int client_counter = 0;
+    TDATA higest_priority_data;
+    struct timespec time_stamp_start, time_stamp;
+    int highest_priority_idx = 0;
+    int head_idx = 0, tail_idx = 0, free_idx = 0;
 
-  pFile = fopen("./log.txt", "w+");
-  if (pFile == NULL)
-  {
-    printf("log file create failed\n");
-    return;
-  }
-  
-  memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
-  memset(&higest_priority_data, 0, sizeof(TDATA));
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
-  memset(&shared_data, 0, sizeof(TDATA) * CLIENT_CNT);
-  
-  for (int client_id = 0; client_id < CLIENT_CNT; client_id++)
-  {
-    invalidate_data(client_id);
-    client_init(client_id);
-  }
-  
-  while (1)
-  {
-    client_exec(&shared_data[0]);
-    main_exec(&shared_data[0]);
-    logger_exec(&shared_data[0]);
-  }  
-  
-/*  
-  while (record_cnt >= 0)
-  {
-    for (int i = 0; i < CLIENT_CNT; i++)
+    pFile = fopen("./log.txt", "w+");
+    if (pFile == NULL)
     {
-        if (priority_queue[shared_data[i].cPriority].valid == 0)
-        {
-          if (shared_data[i].valid)
-          {
-            memcpy(&priority_queue[shared_data[i].cPriority], &shared_data[i], sizeof(TDATA));
-            invalidate_data(i);
-            record_cnt--;
-          }
-        }
+        printf("log file create failed\n");
+        return;
     }
-  }
-*/  
-    
-
- 
-  printf("%li [us] - Finished\n", time_stamp.tv_nsec/1000);
   
-  fclose(pFile);
-  return;
+    memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
+    memset(&higest_priority_data, 0, sizeof(TDATA));
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
+    memset(&shared_data, 0, sizeof(TDATA) * CLIENT_CNT);
+  
+    for (int client_id = 0; client_id < CLIENT_CNT; client_id++)
+    {
+        client_invalidate(&shared_data[client_id]);
+        client_init(client_id);
+    }
+  
+    while (record_cnt >= 0)
+    {
+        client_exec(&shared_data[client_counter]);
+        main_exec(&shared_data[client_counter]);
+        logger_exec();
+        client_counter = ++client_counter % CLIENT_CNT;
+       // printf("* %d\n", record_cnt);
+    }  
+ 
+    printf("%li [us] - Finished\n", time_stamp.tv_nsec/1000);
+    
+    fflush(pFile);
+    fclose(pFile);
+    return;
 }
 
 int search_for_highest_priority(void)
@@ -92,24 +75,35 @@ int search_for_highest_priority(void)
     return i; 
 }
 
-
-
 void main_exec(TDATA* arg)
 {
     if (record_cnt >= 0)
     {
-        for (int i = 0; i < CLIENT_CNT; i++)
-        {
+        //for (int i = 0; i < CLIENT_CNT; i++)
+        //{
+/*            
             if (priority_queue[shared_data[i].cPriority].valid == 0)
             {
                 if (shared_data[i].valid)
                 {
                     memcpy(&priority_queue[shared_data[i].cPriority], &shared_data[i], sizeof(TDATA));
-                    invalidate_data(i);
+                    client_invalidate(&shared_data[i]);
                     record_cnt--;
                 }
             }
-        }
+*/            
+            if (arg->valid)
+            {
+                if (priority_queue[arg->cPriority].valid == 0)
+                {
+                    memcpy(&priority_queue[arg->cPriority], arg, sizeof(TDATA));
+                    client_invalidate(arg);
+                    record_cnt--;
+                }
+            }            
+        //}
+        
+        printf("** %d %d\n", record_cnt, arg->cPriority);
     }
 }
 
