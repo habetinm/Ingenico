@@ -76,31 +76,16 @@ void main_exec(TDATA* arg)
 {
     if (record_cnt >= 0)
     {
-        //for (int i = 0; i < CLIENT_CNT; i++)
-        //{
-/*            
-            if (priority_queue[shared_data[i].cPriority].valid == 0)
+        if (arg->valid)
+        {
+            if (priority_queue[arg->cPriority].valid == 0)
             {
-                if (shared_data[i].valid)
-                {
-                    memcpy(&priority_queue[shared_data[i].cPriority], &shared_data[i], sizeof(TDATA));
-                    client_invalidate(&shared_data[i]);
-                    record_cnt--;
-                }
+                printf("m: %d %li %d\n", record_cnt, arg->dwClientId, arg->cPriority);
+                memcpy(&priority_queue[arg->cPriority], arg, sizeof(TDATA)); // TODO: Data is empty
+                client_invalidate(arg);
+                record_cnt--;
             }
-*/            
-            if (arg->valid)
-            {
-                if (priority_queue[arg->cPriority].valid == 0)
-                {
-                    memcpy(&priority_queue[arg->cPriority], arg, sizeof(TDATA));
-                    client_invalidate(arg);
-                    record_cnt--;
-                }
-            }            
-        //}
-        
-        printf("m: %d %li %d\n", record_cnt, arg->dwClientId, arg->cPriority);
+        }            
     }
 }
 
