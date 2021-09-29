@@ -36,8 +36,8 @@ void logger_exec(void)
                 fprintf(pFile, "%s", str);
                 memset(&priority_queue[queue_idx], 0, sizeof(TDATA));
                 //queue_idx = ++queue_idx % QUEUE_SIZE;
-                --record_cnt;
-                printf("log: %d\n", record_cnt);
+                //--record_cnt;
+                //printf("log: %d\n", record_cnt);
             }
             
             queue_idx = ++queue_idx % QUEUE_SIZE;
