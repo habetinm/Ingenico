@@ -18,7 +18,6 @@ void main_exec(TDATA* arg);
 void main(void)
 {
     int client_counter = 0;
-    TDATA higest_priority_data;
     struct timespec time_stamp_start, time_stamp;
     int highest_priority_idx = 0;
     int head_idx = 0, tail_idx = 0, free_idx = 0;
@@ -31,14 +30,12 @@ void main(void)
     }
   
     memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
-    memset(&higest_priority_data, 0, sizeof(TDATA));
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
     memset(&shared_data, 0, sizeof(TDATA) * CLIENT_CNT);
   
     for (int client_id = 0; client_id < CLIENT_CNT; client_id++)
     {
-        client_invalidate(&shared_data[client_id]);
-        client_init(client_id);
+        client_init(&shared_data[client_id], client_id);
     }
   
     while (record_cnt >= 0)
@@ -103,7 +100,7 @@ void main_exec(TDATA* arg)
             }            
         //}
         
-        printf("** %d %d\n", record_cnt, arg->cPriority);
+        printf("m: %d %li %d\n", record_cnt, arg->dwClientId, arg->cPriority);
     }
 }
 

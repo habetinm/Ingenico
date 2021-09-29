@@ -11,13 +11,10 @@ int message_cnt = RECORD_CNT;
 char ClientData[MAX_MSG_SIZE];
 struct timespec time_stamp;
 
-void client_init(int client_id)
+void client_init(TDATA* arg, int client_id)
 {
-    if (client_id >= 0 && client_id < CLIENT_CNT)
-    {
-        client_invalidate(&shared_data[client_id]);
-        shared_data[client_id].dwClientId = (unsigned long)client_id;
-    }
+    client_invalidate(arg);
+    arg->dwClientId = (unsigned long)client_id;
 }
 
 void client_invalidate(TDATA* arg)
@@ -40,7 +37,7 @@ void client_exec(TDATA* arg)
             arg->cPriority = random() % (MIN_MSG_PRIORITY + 1);
             arg->valid = 1;
             strncpy(arg->Data, ClientData, MAX_MSG_SIZE);
-            printf("++ %li\n", arg->dwClientId);
+            printf("c: %d, %li, %d\n", message_cnt, arg->dwClientId, arg->cPriority);
             
             --message_cnt;
         }

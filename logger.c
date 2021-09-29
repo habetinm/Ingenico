@@ -38,7 +38,7 @@ void logger_exec(void)
                 queue_idx = ++queue_idx % QUEUE_SIZE;
                 --record_cnt;
                 
-                printf("-- %d %d\n", queue_idx, record_cnt);
+                printf("l: %d %d\n", queue_idx, record_cnt);
             }
         }
         
