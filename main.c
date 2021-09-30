@@ -41,7 +41,7 @@ void main(void)
     while (record_cnt >= 0)
     {
         client_exec(&shared_data[client_counter]);
-        main_exec(&shared_data[client_counter]);
+        //main_exec(&shared_data[client_counter]);
         logger_exec();
         client_counter = ++client_counter % CLIENT_CNT;
        // printf("* %d\n", record_cnt);

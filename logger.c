@@ -44,7 +44,7 @@ void logger_exec(void)
         }
         
         //fflush(pFile);        
-        printf("log: %d\n", record_cnt);
+        printf("l: %d\n", record_cnt);
     }
     
     //printf("log: %d\n", record_cnt);
