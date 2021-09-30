@@ -27,9 +27,7 @@ void client_invalidate(TDATA* arg)
 
 void client_exec(TDATA* arg)
 {
-    //printf("c: %d, %li, %d\n", message_cnt, arg->dwClientId, arg->cPriority);
-            
-    if (message_cnt >= 0)
+    if (message_cnt > 0)
     {
         if (arg->valid == 0)
         {
@@ -38,9 +36,6 @@ void client_exec(TDATA* arg)
             arg->cPriority = random() % (MIN_MSG_PRIORITY + 1);
             arg->valid     = 1;
             strncpy(arg->Data, ClientData, MAX_MSG_SIZE);
-            
-            printf("c: %d, %li, %d\n", message_cnt, arg->dwClientId, arg->cPriority);
-            
             --message_cnt;
         }
     }

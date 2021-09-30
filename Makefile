@@ -1,4 +1,4 @@
-REQ_RECORD_CNT=100
+REQ_RECORD_CNT=10000
 REQ_CLIENT_CNT=10
 
 app: main.c data.h client.o logger.o
