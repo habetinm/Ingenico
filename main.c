@@ -15,7 +15,7 @@ void main_exec(TDATA* arg);
 
 void main(void)
 {
-    unsigned char do_logging = 0;
+    //unsigned char do_logging = 0;
     int client_counter = 0;
     struct timespec time_stamp_start, time_stamp;
     int highest_priority_idx = 0;
@@ -40,17 +40,12 @@ void main(void)
     {
         client_exec(&shared_data[client_counter]);
         main_exec(&shared_data[client_counter]);
-        
-        if (do_logging)
-        {
-            logger_exec();
-        }
-        do_logging = 1;
+        logger_exec();
 
         client_counter = ++client_counter % CLIENT_CNT;
     }  
  
-    printf("%li [us] - Finished\n", time_stamp.tv_nsec/1000);
+    printf("Finished\n");
     
     fflush(pFile);
     fclose(pFile);

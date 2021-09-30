@@ -43,7 +43,7 @@ void client_exec(TDATA* arg)
         }
     }
     
-    test(arg);
+    //test(arg);
 }
 
 void test(TDATA* arg)
