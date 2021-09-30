@@ -9,10 +9,8 @@
 
 FILE* pFile;
 TDATA shared_data[CLIENT_CNT];
-//TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
 int record_cnt = RECORD_CNT;
 
-int search_for_highest_priority(void);
 void main_exec(TDATA* arg);
 
 void main(void)
@@ -29,7 +27,6 @@ void main(void)
         return;
     }
   
-    //memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
     memset(&shared_data, 0, sizeof(TDATA) * CLIENT_CNT);
   
@@ -54,6 +51,7 @@ void main(void)
         {
             last_cli_id = CLIENT_CNT - 1;
         }        
+        
         client_invalidate(&shared_data[last_cli_id]);
         
         client_counter = ++client_counter % CLIENT_CNT;
@@ -64,24 +62,6 @@ void main(void)
     fflush(pFile);
     fclose(pFile);
     return;
-}
-
-int search_for_highest_priority(void)
-{
-    int i;
-    int min = 255;
-    for (i = 0; i < CLIENT_CNT; i++)
-    {
-        if (shared_data[i].valid == 1)
-        {
-            if (shared_data[i].cPriority < min)
-            {
-                min = shared_data[i].cPriority;
-            }
-        }
-    }
-  
-    return i; 
 }
 
 void main_exec(TDATA* arg)
@@ -97,8 +77,6 @@ void main_exec(TDATA* arg)
     {
         last_cli_id = CLIENT_CNT - 1;
     }
-    
-    //printf("-- %li %li\n", arg->dwTicks, shared_data[last_cli_id].dwTicks);
     
     if (arg->dwTicks == shared_data[last_cli_id].dwTicks)
     {
