@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "data.h"
 #include "logger.h"
+#include "client.h"
 
 extern FILE* pFile;
 extern TDATA shared_data[CLIENT_CNT];
@@ -15,8 +16,8 @@ int queue_idx = 0;
 
 void logger_exec(void)
 {
-    struct timespec time_stamp;
-    char str[256];
+    static struct timespec time_stamp;
+    static char str[256];
   
     if (record_cnt > 0)
     {
@@ -30,13 +31,11 @@ void logger_exec(void)
                     shared_data[queue_idx].cPriority, 
                     shared_data[queue_idx].dwTicks);
                 
-            printf("%s", str);
+            //printf("%s", str);
                 
             fprintf(pFile, "%s", str);
-            memset(&shared_data[queue_idx], 0, sizeof(TDATA));
-            //queue_idx = ++queue_idx % QUEUE_SIZE;
+            client_invalidate(&shared_data[queue_idx]);
             --record_cnt;
-            //printf("log: %d\n", record_cnt);
         }
             
         queue_idx = ++queue_idx % QUEUE_SIZE;

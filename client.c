@@ -6,10 +6,13 @@
 #include "data.h"
 #include "client.h"
 
+
 extern TDATA shared_data[CLIENT_CNT];
 int message_cnt = RECORD_CNT;
 char ClientData[MAX_MSG_SIZE];
 struct timespec time_stamp;
+
+void test(TDATA* arg);
 
 void client_init(TDATA* arg, int client_id)
 {
@@ -37,6 +40,22 @@ void client_exec(TDATA* arg)
             arg->valid     = 1;
             strncpy(arg->Data, ClientData, MAX_MSG_SIZE);
             --message_cnt;
+        }
+    }
+    
+    test(arg);
+}
+
+void test(TDATA* arg)
+{
+    static unsigned int test_arr[CLIENT_CNT];
+    test_arr[arg->dwClientId] = arg->dwTicks;
+    if (arg->cPriority == 150)
+    {
+        if (arg->dwClientId >= 1)
+        {
+            arg->dwTicks = test_arr[arg->dwClientId - 1];
+            printf("tst: %li\n", arg->dwTicks);
         }
     }
 }

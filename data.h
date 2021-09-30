@@ -17,7 +17,7 @@
 #define MAX_MSG_SIZE 255
 #define MAX_MSG_PRIORITY 0
 #define MIN_MSG_PRIORITY 255
-#define QUEUE_SIZE (MIN_MSG_PRIORITY + 1)
+#define QUEUE_SIZE CLIENT_CNT
 
 typedef struct tagTDATA {
          unsigned char cPriority;  //request priority 0 – 255 (0 – the highest priority)

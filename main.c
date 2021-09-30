@@ -9,7 +9,7 @@
 
 FILE* pFile;
 TDATA shared_data[CLIENT_CNT];
-TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
+//TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
 int record_cnt = RECORD_CNT;
 
 int search_for_highest_priority(void);
@@ -29,7 +29,7 @@ void main(void)
         return;
     }
   
-    memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
+    //memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
     memset(&shared_data, 0, sizeof(TDATA) * CLIENT_CNT);
   
@@ -41,6 +41,7 @@ void main(void)
     while (record_cnt > 0)
     {
         client_exec(&shared_data[client_counter]);
+        main_exec(&shared_data[client_counter]);
         logger_exec();
         client_counter = ++client_counter % CLIENT_CNT;
     }  
@@ -72,20 +73,31 @@ int search_for_highest_priority(void)
 
 void main_exec(TDATA* arg)
 {
-    if (record_cnt >= 0)
+    static TDATA tmp;
+    static unsigned long last_cli_id;
+    
+    if (arg->dwClientId >= 1)
+    { 
+        last_cli_id = (arg->dwClientId - 1);
+    }
+    else // arg->dwClientId == 0
     {
-        if (arg->valid)
+        last_cli_id = CLIENT_CNT - 1;
+    }
+    
+    printf("-- %li %li\n", arg->dwTicks, shared_data[last_cli_id].dwTicks);
+    
+    if (arg->dwTicks == shared_data[last_cli_id].dwTicks)
+    {
+        if (arg->cPriority < shared_data[last_cli_id].cPriority)
         {
-            if (priority_queue[arg->cPriority].valid == 0)
-            {
-                printf("m: %d %li %d\n", record_cnt, arg->dwClientId, arg->cPriority);
-                memcpy(&priority_queue[arg->cPriority], arg, sizeof(TDATA)); // TODO: Data is empty
-                client_invalidate(arg);
-                record_cnt--;
-            }
-        }            
+            // swap
+            memcpy(&tmp, arg, sizeof(TDATA));
+            memcpy(arg, &shared_data[last_cli_id], sizeof(TDATA));
+            memcpy(&shared_data[last_cli_id], &tmp, sizeof(TDATA));
+            printf("swp: %li\n", arg->dwTicks);
+        }
     }
 }
-
 
 
