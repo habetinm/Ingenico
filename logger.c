@@ -34,7 +34,7 @@ void logger_exec(void)
             //printf("%s", str);
                 
             fprintf(pFile, "%s", str);
-            client_invalidate(&shared_data[queue_idx]);
+            //client_invalidate(&shared_data[queue_idx]);
             --record_cnt;
         }
             

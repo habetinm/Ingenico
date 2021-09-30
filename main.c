@@ -40,9 +40,22 @@ void main(void)
   
     while (record_cnt > 0)
     {
+        static unsigned long last_cli_id;
+        
         client_exec(&shared_data[client_counter]);
         main_exec(&shared_data[client_counter]);
         logger_exec();
+        
+        if (client_counter >= 1)
+        { 
+            last_cli_id = (client_counter - 1);
+        }
+        else // client_counter == 0
+        {
+            last_cli_id = CLIENT_CNT - 1;
+        }        
+        client_invalidate(&shared_data[last_cli_id]);
+        
         client_counter = ++client_counter % CLIENT_CNT;
     }  
  
@@ -85,7 +98,7 @@ void main_exec(TDATA* arg)
         last_cli_id = CLIENT_CNT - 1;
     }
     
-    printf("-- %li %li\n", arg->dwTicks, shared_data[last_cli_id].dwTicks);
+    //printf("-- %li %li\n", arg->dwTicks, shared_data[last_cli_id].dwTicks);
     
     if (arg->dwTicks == shared_data[last_cli_id].dwTicks)
     {
