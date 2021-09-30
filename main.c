@@ -15,7 +15,6 @@ void main_exec(TDATA* arg);
 
 void main(void)
 {
-    //unsigned char do_logging = 0;
     int client_counter = 0;
     struct timespec time_stamp_start, time_stamp;
     int highest_priority_idx = 0;
@@ -52,10 +51,9 @@ void main(void)
     return;
 }
 
-TDATA tmp;
 void main_exec(TDATA* arg)
 {
-    //static TDATA tmp;
+    static TDATA tmp;
     static unsigned long last_cli_id;
     
     if (arg->dwClientId >= 1)
@@ -74,35 +72,9 @@ void main_exec(TDATA* arg)
             if (arg->cPriority < shared_data[last_cli_id].cPriority)
             {
                 // swap
-                printf("%li %d %li, %li %d %li\n", 
-                       shared_data[last_cli_id+1].dwClientId, 
-                       shared_data[last_cli_id+1].cPriority, 
-                       shared_data[last_cli_id+1].dwTicks, 
-                       shared_data[last_cli_id].dwClientId, 
-                       shared_data[last_cli_id].cPriority, 
-                       shared_data[last_cli_id].dwTicks); 
-                
-                //memcpy(&tmp, arg, sizeof(TDATA));
-                //memcpy(arg, &shared_data[last_cli_id], sizeof(TDATA));
-                //memcpy(&shared_data[last_cli_id], &tmp, sizeof(TDATA));
-                
                 memcpy(&tmp, &shared_data[last_cli_id], sizeof(TDATA));
                 memcpy(&shared_data[last_cli_id], arg, sizeof(TDATA));
                 memcpy(arg, &tmp, sizeof(TDATA));
-
-                //tmp = *arg;
-                //shared_data[last_cli_id] = *arg;
-                //*arg = tmp;
-                
-                printf("%li %d %li, %li %d %li\n", 
-                       shared_data[last_cli_id+1].dwClientId, 
-                       shared_data[last_cli_id+1].cPriority, 
-                       shared_data[last_cli_id+1].dwTicks, 
-                       shared_data[last_cli_id].dwClientId, 
-                       shared_data[last_cli_id].cPriority, 
-                       shared_data[last_cli_id].dwTicks); 
-                
-                printf("swp: %li\n", arg->dwTicks);
             }
         }
     }
