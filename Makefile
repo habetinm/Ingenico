@@ -1,4 +1,4 @@
-REQ_RECORD_CNT=10000
+REQ_RECORD_CNT=100000
 REQ_CLIENT_CNT=10
 
 app: main.c data.h client.o logger.o
@@ -12,4 +12,4 @@ logger.o: logger.c logger.h data.h
 	
 .PHONY: clean
 clean:
-	rm -f main.o logger.o client.o a.out app log.txt
+	rm -f main.o logger.o client.o a.out app log.txt log*.txt
