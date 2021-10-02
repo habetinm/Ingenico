@@ -15,7 +15,6 @@ pthread_t thread_id[THREAD_CNT];
 pthread_t logger_id;
 TDATA shared_data[THREAD_CNT];
 TDATA priority_queue[QUEUE_SIZE]; // each priority has its own slot
-int data;
 int record_cnt = RECORD_CNT;
 
 int search_for_highest_priority(void);
@@ -39,14 +38,13 @@ void main(void)
   memset(priority_queue, 0, sizeof(TDATA) * QUEUE_SIZE);
   memset(&higest_priority_data, 0, sizeof(TDATA));
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time_stamp_start);
-  data = 0;
   memset(&shared_data, 0, sizeof(TDATA) * THREAD_CNT);
   
   for (int i = 0; i < THREAD_CNT; i++)
   {
     invalidate_data(i);
     pthread_mutex_init(&mutexes[i], NULL);
-    pthread_create(&thread_id[i], NULL, client_func, (void*)data++);
+    pthread_create(&thread_id[i], NULL, client_func, NULL);
     shared_data[i].dwClientId = (unsigned long)thread_id[i];
   }
   
