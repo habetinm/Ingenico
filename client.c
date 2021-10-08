@@ -15,7 +15,7 @@ void* client_func(void* arg)
 {
   char ClientData[MAX_MSG_SIZE];
   struct timespec time_stamp;
-  int cli_id = (int)pthread_self();
+  unsigned long cli_id = pthread_self();
   static int my_idx;
   
   for (int i = 0; i < THREAD_CNT; i++)
