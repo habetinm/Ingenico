@@ -46,6 +46,7 @@ void main(void)
     pthread_mutex_init(&mutexes[i], NULL);
     pthread_create(&thread_id[i], NULL, client_func, NULL);
     shared_data[i].dwClientId = (unsigned long)thread_id[i];
+    printf("m: %d %li\n", i, shared_data[i].dwClientId);
   }
   
   for (int i = 0; i < QUEUE_SIZE; i++)

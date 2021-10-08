@@ -16,7 +16,7 @@ void* client_func(void* arg)
   char ClientData[MAX_MSG_SIZE];
   struct timespec time_stamp;
   int cli_id = (int)pthread_self();
-  int my_idx;
+  static int my_idx;
   
   for (int i = 0; i < THREAD_CNT; i++)
   {
@@ -26,6 +26,8 @@ void* client_func(void* arg)
       break;
     }
   }
+  
+  printf("c: %d %li\n", my_idx, pthread_self());
   
   while (record_cnt >= 0)
   {
