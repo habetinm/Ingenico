@@ -1,6 +1,8 @@
 REQ_RECORD_CNT=10000
 REQ_CLIENT_CNT=10
 
+all: app
+
 app: main.c data.h client.o logger.o
 	gcc -DCLIENT_CNT=$(REQ_CLIENT_CNT) -DRECORD_CNT=$(REQ_RECORD_CNT) client.o logger.o main.c -o app
 	
