@@ -12,7 +12,7 @@ extern FILE* pFile;
 extern TDATA shared_data[CLIENT_CNT];
 extern int record_cnt;
 int queue_idx = 0;
-struct timespec time_stamp;
+static struct timespec time_stamp;
 unsigned char do_logging = 0;
 
 void logger_exec(void)

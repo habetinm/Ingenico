@@ -10,7 +10,7 @@
 extern TDATA shared_data[CLIENT_CNT];
 int message_cnt = RECORD_CNT;
 char ClientData[MAX_MSG_SIZE];
-struct timespec time_stamp;
+static struct timespec time_stamp;
 
 void test(TDATA* arg);
 
